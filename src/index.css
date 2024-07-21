@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* Input_Empty_Corner_All */
+
+/* box-sizing: border-box;
+
+position: absolute;
+left: 569px;
+right: 678px;
+top: 713px;
+bottom: 433px;
+
+border: 2px solid #008060;
+border-radius: 4px; */

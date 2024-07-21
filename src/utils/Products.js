@@ -35,7 +35,6 @@ export default function useProductSearch(searchTerm, pageNo) {
               title: item.title,
               image: item.image,
               indeterminate: false,
-              isShowingVariants: false,
               variants: item.variants.map((el) => {
                 return { ...el, isSelected: false };
               }),
