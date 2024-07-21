@@ -1,8 +1,9 @@
 /* eslint-disable react/prop-types */
-import { Reorder, useDragControls } from "framer-motion";
-import { MdClose } from "react-icons/md";
 import { FaPen } from "react-icons/fa";
 import { RiDraggable } from "react-icons/ri";
+import { Reorder, useDragControls } from "framer-motion";
+import Accordion from "./Accordion";
+import DiscountGroup from "./DiscountGroup";
 
 function ProductList({ setCurrIdx, modalRef, allProducts, setAllProducts }) {
   const controls = useDragControls();
@@ -25,34 +26,59 @@ function ProductList({ setCurrIdx, modalRef, allProducts, setAllProducts }) {
     ].variants.filter((el) => el.id !== variant.id);
     setAllProducts(updatedVarOrder);
   }
+
+  function onItemClose(item_index) {
+    const updatedItems = [
+      ...allProducts.slice(0, item_index),
+      ...allProducts.slice(item_index + 1, allProducts.length),
+    ];
+    setAllProducts(updatedItems);
+  }
   return (
-    <Reorder.Group values={allProducts} onReorder={setAllProducts}>
+    <Reorder.Group
+      className="flex flex-col mb-6"
+      values={allProducts}
+      onReorder={setAllProducts}
+    >
+      <div className="w-[630px] font-semibold mb-3 grid grid-cols-[10%_60%_30%]">
+        <div> </div>
+        <div>Product</div>
+        <div>Discount</div>
+      </div>
       {allProducts.map((product, prod_i) => {
         if (product.id < 0)
           return (
             <Reorder.Item
-              className="flex items-center"
+              className={`flex items-center w-[630px] gap-3 mb-4 text-black/80 ${
+                allProducts.length !== prod_i + 1 && "border-b"
+              }`}
               value={product}
               key={product.id}
             >
-              <RiDraggable
-                className="text-xl"
-                onPointerDown={(e) => controls.start(e)}
-              />
-              {prod_i + 1}.
-              <div className="bg-white border text-sm h-8 w-[215px] flex items-center justify-between">
-                Select Product
-                <button
-                  onClick={() => {
-                    modalRef.current.showModal();
-                  }}
-                >
-                  <FaPen className="text-black/20" />
-                </button>
+              <div className="w-full items-center grid grid-cols-[5%_60%_35%] mb-3 gap-x-2">
+                <div className="flex items-center">
+                  <RiDraggable
+                    className="text-xl"
+                    onPointerDown={(e) => controls.start(e)}
+                  />
+                  {prod_i + 1}.
+                </div>
+                <div className="bg-white grow border px-3 h-full flex items-center justify-between">
+                  <div className="text-sm-1 ">Select Product</div>
+                  <button
+                    onClick={() => {
+                      modalRef.current.showModal();
+                    }}
+                  >
+                    <FaPen className="text-black/20" />
+                  </button>
+                </div>
+                <DiscountGroup
+                  elementType="product"
+                  onItemClose={onItemClose}
+                  prod_i={prod_i}
+                />
               </div>
-              <button className="w-[141px] bg-[#008060] border-[#008060] text-sm p-2 rounded rounded-s border-2 text-white h-8">
-                Add Discount
-              </button>
             </Reorder.Item>
           );
         return (
@@ -61,57 +87,37 @@ function ProductList({ setCurrIdx, modalRef, allProducts, setAllProducts }) {
             value={product}
             dragListener={false}
             dragControls={controls}
-            className="flex flex-col items-center mb-3"
+            className={`flex flex-col w-[630px] gap-3 items-center mb-3 p-3 ${
+              allProducts.length !== prod_i + 1 && "border-b"
+            }`}
           >
-            <div className="flex items-center">
-              <RiDraggable
-                className="text-xl"
-                onPointerDown={(e) => controls.start(e)}
-              />
-              {prod_i + 1}.
-              <div
-                key={prod_i}
-                className="bg-white border text-sm h-8 w-[215px] flex items-center justify-between"
-              >
-                {product.title}
+            <div className="w-full grid grid-cols-[5%_60%_35%] gap-x-2">
+              <div className="flex gap-1 items-center text-black/80">
+                <RiDraggable
+                  className="text-xl"
+                  onPointerDown={(e) => controls.start(e)}
+                />
+                {prod_i + 1}.
+              </div>
+              <div className="bg-white grow border px-3 h-full flex items-center justify-between">
+                <div className="text-sm-1">{product.title}</div>
                 <button onClick={onProductEdit}>
-                  <FaPen />
+                  <FaPen className="text-black/20" />
                 </button>
               </div>
-              <button className="w-[141px] h-8 bg-[#008060] border-[#008060] text-sm p-2 rounded rounded-s border-2 text-white">
-                Add Discount
-              </button>
+              <DiscountGroup
+                elementType="product"
+                onItemClose={onItemClose}
+                prod_i={prod_i}
+              />
             </div>
-            <Reorder.Group
-              values={product.variants}
-              className="flex flex-col gap-6"
-              onReorder={(newOrderedVars) => {
-                onVariantReorder(newOrderedVars, prod_i);
-              }}
-            >
-              {product.variants.map((variant) => {
-                return (
-                  <Reorder.Item
-                    key={variant.id}
-                    value={variant}
-                    className="flex items-center"
-                  >
-                    <RiDraggable
-                      className="text-xl"
-                      onPointerDown={(e) => controls.start(e)}
-                    />
-                    <div className="text-sm py-[5px] px-4 w-[184px] rounded-[30px] border">
-                      {variant.title}
-                    </div>
-                    <MdClose
-                      onClick={() => {
-                        onVariantClose(variant, prod_i);
-                      }}
-                    />
-                  </Reorder.Item>
-                );
-              })}
-            </Reorder.Group>
+
+            <Accordion
+              product={product}
+              prod_i={prod_i}
+              onVariantReorder={onVariantReorder}
+              onVariantClose={onVariantClose}
+            />
           </Reorder.Item>
         );
       })}

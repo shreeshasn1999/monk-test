@@ -137,7 +137,6 @@ function ProductPicker({ modalRef, currIdx, setAllProducts }) {
               </button>
             </div>
             <div className="p-2 border-b w-[663px] flex justify-center">
-              {/* <div className="flex items-center gap-2 border h-8 w-[600px] p-1"> */}
               <label
                 htmlFor="searchItem"
                 className="flex items-center gap-2 border rounded h-8 w-[600px] p-1 relative text-gray-400 focus-within:text-gray-600"
@@ -146,7 +145,7 @@ function ProductPicker({ modalRef, currIdx, setAllProducts }) {
                 <input
                   name="searchItem"
                   id="searchItem"
-                  className="form-input w-full text-start pl-8 accent-inherit"
+                  className="form-input w-full text-start pl-8 text-sm-1"
                   placeholder="Search products"
                   onChange={(e) => {
                     setSearchTerm(e.target.value);
@@ -155,7 +154,6 @@ function ProductPicker({ modalRef, currIdx, setAllProducts }) {
                   type="text"
                 />
               </label>
-              {/* </div> */}
             </div>
           </div>
           {error !== <p>{error}</p>}
