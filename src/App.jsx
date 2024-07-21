@@ -69,7 +69,9 @@ function App() {
   return (
     <main className="bg-[#F6F6F8] w-full h-screen font-['SF_Pro_Text']">
       <div className="flex flex-col max-w-[645px] mx-auto">
-        <h1 className="self-start font-semibold mb-8">Add Products</h1>
+        <h1 className="mt-[100px] self-start font-semibold mb-8">
+          Add Products
+        </h1>
         <ProductPicker
           modalRef={modalRef}
           currIdx={currIdx}
